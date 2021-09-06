@@ -5,7 +5,7 @@ var gameState=1;
 
 var knife,fruit ,monster,fruitGroup,monsterGroup, score,r,randomFruit, position;
 var knifeImage , fruit1, fruit2 ,fruit3,fruit4, monsterImage, gameOverImage;
-var knifeSwooshSound,gameOverSound
+var gameOverSound ,knifeSwoosh;
 
 function preload(){
   
@@ -16,10 +16,9 @@ function preload(){
   fruit3 = loadImage("fruit3.png");
   fruit4 = loadImage("fruit4.png");
   gameOverImage = loadImage("gameover.png")
-
-  //load sound here
-  knifeSwooshSound = loadSound(knifeSwoosh.mp3)
-  gameOverSound = loadSound(gameover.mp3)
+  
+  gameOverSound = loadSound("gameover.mp3")
+  knifeSwooshSound = loadSound("knifeSwoosh.mp3")
 }
 
 
@@ -32,6 +31,8 @@ function setup() {
    knife.addImage(knifeImage);
    knife.scale=0.7
   
+  
+  
   //set collider for sword
   knife.setCollider("rectangle",0,0,40,40);
 
@@ -39,9 +40,6 @@ function setup() {
   score=0;
   fruitGroup=createGroup();
   monsterGroup=createGroup();
-
- // knifeSwooshSound = loadSound("knifeSwoosh.mp3")
-  //gameOverSound = loadSound("gameover.mp3")
   
 }
 
@@ -61,17 +59,17 @@ function draw() {
     // Increase score if sword touching fruit
     if(fruitGroup.isTouching(knife)){
       fruitGroup.destroyEach();
-      score=score+2
-      knifeSwooshSound.play()
+      
+      knifeSwooshSound.play();
+      score=score+2;
     }
     else
     {
       // Go to end state if sword touching enemy
       if(monsterGroup.isTouching(knife)){
         gameState=END;
-        
-        //add gameover sound here
-        gameoverSound.play();
+        //gameover sound
+        gameOverSound.play()
         
         fruitGroup.destroyEach();
         monsterGroup.destroyEach();
@@ -99,8 +97,7 @@ function Monster(){
     monster=createSprite(400,200,20,20);
     monster.addAnimation("moving", monsterImage);
     monster.y=Math.round(random(100,550));
-    //update below give line of code for increase monsterGroup speed by 10
-    monster.velocityX = -(8+(score/10));
+    monster.velocityX=-(8+(score/10));
     monster.setLifetime=50;
     
     monsterGroup.add(monster);
@@ -111,22 +108,21 @@ function fruits(){
   if(World.frameCount%80===0){
     position = Math.round(random(1,2));
     fruit=createSprite(400,200,20,20);
-    
+    console.log(position)
      //using random variable change the position of fruit, to make it more challenging
     
     if(position==1)
     {
     fruit.x=600;
-    //update below give line of code for increase fruitGroup speed by 4
-    fruit.velocityX = -(7+(score/4));
+    fruit.velocityX=-(7+(score/4));
     }
     else
     {
       if(position==2){
-      fruit.x=600;
+      fruit.x=0;
       
-     //update below give line of code for increase fruitGroup speed by 4
-      fruit.velocityX= -(7+(score/4));
+  //Increase the velocity of fruit after score 4 or 10
+      fruit.velocityX= (7+(score/4));
       }
     }
     
